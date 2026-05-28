@@ -1,1 +1,64 @@
+RMs:
+Enzo Posterlli Strinta - RM570035
+Giovanna Tristão Lopes - RM572552
+Vinicius Brito Davi - RM569709
 
+# Mission Control AI 🚀
+### *Sistema Inteligente de Monitoramento de Missão Espacial*
+#### **Global Solution 2026 — Pensamento Computacional e Automação com Python**
+
+---
+
+## 📋 Visão Geral do Projeto
+
+O **Mission Control AI** é uma solução em Python desenvolvida para simular o monitoramento inteligente de uma missão espacial experimental (a *Project Silver Eclipse*). A indústria aeroespacial exige o acompanhamento contínuo de métricas vitais para prever falhas, mitigar riscos e apoiar decisões rápidas de engenheiros de voo e inteligências artificiais de bordo.
+
+Este sistema processa dados multidimensionais (matrizes) coletados de sensores ao longo de múltiplos ciclos operacionais, analisa de forma independente cada um dos parâmetros vitais de acordo com limites técnicos rígidos, calcula scores de risco e gera relatórios consolidados automáticos com identificação de tendências, áreas críticas e diretrizes de contingência.
+
+---
+
+## 🛠️ Principais Funcionalidades
+
+- **Monitoramento Multivariado**: Análise em tempo real de 5 parâmetros cruciais da nave:
+  1. *Temperatura Interna* (°C)
+  2. *Qualidade da Comunicação com a Base* (%)
+  3. *Nível de Carga do Sistema de Energia/Bateria* (%)
+  4. *Nível de Suporte de Oxigênio* (%)
+  5. *Estabilidade Operacional de Sistemas* (%)
+- **Lógica Decisional de Riscos**: Sistema inteligente baseado em regras de negócio calibradas que distribui pontuações de severidade (0 a 2 pontos) para cada leitura.
+- **Classificação Dinâmica de Ciclo**: Identifica o status global de cada momento da missão em **Estável**, **Atenção** ou **Crítico**.
+- **Motor de Recomendações Automatizado**: Sugere instruções textuais baseadas nos problemas específicos detectados em cada subsistema.
+- **Análise Histórica e de Tendências**: Compara matematicamente os estados iniciais e finais para plotar curvas de tendência (Melhora, Piora ou Estabilidade), calcula médias históricas e encontra o exato ciclo mais crítico da operação.
+- **Identificação da Área Mais Afetada**: Descobre qual subsistema acumulou a maior quantidade de pontos de risco, isolando gargalos estruturais da espaçonave.
+- **Interface Visual Fluida**: Terminal formatado com o uso de sequências de cores ANSI para facilitar a leitura por operadores humanos.
+
+---
+
+## 📦 Estrutura do Código e Modularização
+
+O software foi projetado seguindo as melhores práticas de Clean Code, mantendo o código modularizado em 9 funções bem definidas, sem dependência de bibliotecas externas complexas, garantindo portabilidade absoluta:
+
+- `analisar_temperatura(valor)`: Avalia limites térmicos e emite alertas.
+- `analisar_comunicacao(valor)`: Mede integridade de pacotes de dados e latência com a Terra.
+- `analisar_bateria(valor)`: Controla as curvas de descarga e recarga de energia.
+- `analisar_oxigenio(valor)`: Monitora a saturação no módulo de suporte à vida.
+- `analisar_estabilidade(valor)`: Mede as vibrações mecânicas e desvios de software.
+- `classificar_ciclo(pontos_totais)`: Retorna as tags textuais e formatações de cor para a gravidade global do ciclo.
+- `gerar_recomendacao(classificacoes)`: Interpreta os desvios de telemetria e sugere protocolos de contenção.
+- `analisar_tendencia(primeiro_risco, ultimo_risco)`: Faz a verificação preditiva/histórica da missão.
+- `executar_mission_control()`: Função mestre responsável pela iteração das matrizes, acumulação estatística de métricas e renderização do dashboard final.
+
+---
+
+## 📊 Matriz de Dados de Telemetria
+
+Os dados utilizados representam uma simulação real de estresse de sistemas durante 6 ciclos de amostragem:
+
+| Ciclo | Temp. (°C) | Comunicação (%) | Energia (%) | Oxigênio (%) | Estabilidade (%) | Status Esperado |
+| :---: | :--------: | :-------------: | :---------: | :----------: | :--------------: | :-------------: |
+|   1   |     24     |       92        |     88      |      96      |        90        | ESTÁVEL         |
+|   2   |     27     |       80        |     72      |      94      |        85        | ESTÁVEL         |
+|   3   |     31     |       65        |     58      |      91      |        70        | ATENÇÃO         |
+|   4   |     36     |       42        |     38      |      87      |        55        | CRÍTICO         |
+|   5   |     39     |       28        |     19      |      78      |        35        | CRÍTICO         |
+|   6   |     34     |       55        |     32      |      82      |        50        | ATENÇÃO         |
