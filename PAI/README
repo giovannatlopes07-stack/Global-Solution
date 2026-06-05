@@ -1,1 +1,32 @@
+# Mission Control AI - [Nome Opcional do Seu Projeto]
 
+## Integrantes:
+Enzo Posterlli Strinta - RM570035
+Giovanna Tristão Lopes - RM572552
+Vinicius Brito Davi - RM569709
+
+## Descrição do Projeto
+Este projeto foi desenvolvido para a Global Solution 2026.1 da FIAP na disciplina de **Prompt and Artificial Intelligence**. O sistema consiste em uma plataforma funcional de análise operacional e monitoramento para o controle básico de uma missão espacial experimental. 
+
+Utilizando Python estruturado e inteligência artificial generativa local, o software monitora em tempo real parâmetros cruciais como temperatura dos módulos, nível de energia das baterias e integridade da comunicação. Através de estruturas lógicas, ele toma decisões imediatas automatizadas e repassa os relatórios analíticos para o modelo **Llama 3.2 1B (via Ollama)**, que atua como o engenheiro de missão cognitivo, fornecendo diagnósticos preditivos e insights acionáveis sobre a segurança aeroespacial.
+
+## Demonstração
+> **Atenção:** Abaixo constam as evidências do sistema operando em tempo real no ambiente simulado.
+
+### 1. Dados Operacionais Normais (Cenário Nominal)
+![Dados da missão](assets/dados_missao.png)
+
+### 2. Alerta Crítico e Tomada de Decisão Automatizada (Cenário de Crise)
+![Alerta crítico](assets/alerta_critico.png)
+
+## Como Executar
+O projeto foi integralmente construído para ser executado no ambiente de nuvem do Google Colab, eliminando quaisquer necessidades de configurações de hardware locais.
+
+1. Acesse o nosso notebook oficial: [Acessar Notebook no Google Colab](https://colab.research.google.com/drive/SEU_LINK_DO_COLAB_AQUI)
+2. Certifique-se de que o ambiente está conectado a uma GPU (T4 recomendada para maior velocidade).
+3. Vá no menu superior e clique em **Ambiente de Execução > Executar tudo** (ou utilize o atalho `Ctrl + F9`).
+4. O notebook baixará e inicializará o servidor do Ollama com o Llama 3.2 1B em background de maneira 100% autônoma antes de renderizar os painéis.
+
+## Vídeo de Demonstração
+Assista à nossa apresentação completa do projeto, explicação do código e execução dos testes em menos de 3 minutos:
+* 🎥 [Assistir ao Vídeo de Demonstração](https://link-do-seu-video-aqui.com)
