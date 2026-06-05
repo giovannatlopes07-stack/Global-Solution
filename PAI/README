@@ -22,7 +22,7 @@ Utilizando Python estruturado e inteligência artificial generativa local, o sof
 ## Como Executar
 O projeto foi integralmente construído para ser executado no ambiente de nuvem do Google Colab, eliminando quaisquer necessidades de configurações de hardware locais.
 
-1. Acesse o nosso notebook oficial: [Acessar Notebook no Google Colab](https://colab.research.google.com/drive/SEU_LINK_DO_COLAB_AQUI)
+1. Acesse o nosso notebook oficial: [Acessar Notebook no Google Colab](https://colab.research.google.com/drive/1EOw32S9fXggGPBgi-OgxgKyroFKcPy5c#scrollTo=EBPeMPnSnvS9)
 2. Certifique-se de que o ambiente está conectado a uma GPU (T4 recomendada para maior velocidade).
 3. Vá no menu superior e clique em **Ambiente de Execução > Executar tudo** (ou utilize o atalho `Ctrl + F9`).
 4. O notebook baixará e inicializará o servidor do Ollama com o Llama 3.2 1B em background de maneira 100% autônoma antes de renderizar os painéis.
