@@ -1,1 +1,203 @@
+GLOBAL SOLUTION 2026
+Relatório Técnico Avançado: Sistema IoT para Monitoramento de Cápsula
+Espacial
+Curso: Ciência da Computação
+Instituição: FIAP (Faculdade de Informática e
+Administração Paulista)
+Semestre: 1° Semestre de 2026 
+Integrantes do Grupo:
+• Enzo Posterlli Strinta - RM570035
+• Giovanna Tristão Lopes - RM572552
+• Vinicius Brito Davi - RM569709 
 
+1. Introdução
+A exploração aeroespacial contemporânea vive uma transição de paradigma fundamental, caracterizada pela
+forte evolução de sistemas governamentais tradicionais para plataformas ágeis apoiadas na engenharia de
+software e na iniciativa privada. Dispositivos e módulos espaciais operam em ambientes de extrema
+hostilidade, expostos a variações térmicas drásticas, radiação cósmica destrutiva e severas forças dinâmicas,
+como as vibrações mecânicas decorrentes do lançamento e da acoplagem. Nesse cenário extremo, a
+implementação de sistemas de monitoramento contínuo em tempo real deixa de ser um recurso opcional e
+assume o papel de salvaguarda crítica para a sobrevivência das tripulações e preservação de cargas úteis
+digitais de alto valor.
+O presente projeto apoia-se nos pilares da arquitetura de Edge Computing (computação de borda) e da
+Internet das Coisas (IoT) para conceber um ecossistema embarcado local dotado de automação reflexiva. Ao
+coletar dados e tratá-los no próprio microcontrolador de forma autônoma, minimiza-se a latência analítica e
+garante-se que ações corretivas e de alerta visual ocorram em milissegundos, independentemente de
+conexões distantes com estações terrestres.
+2. Objetivo do Projeto
+O objetivo central deste trabalho é o desenvolvimento, a prototipagem e a validação computacional de um
+Sistema IoT Embarcado de Alta Confiabilidade projetado para o monitoramento contínuo das condições
+FIAP - Global Solution 2026
+1
+físicas internas de uma cápsula espacial operacional. O sistema destina-se a gerenciar e analisar em tempo
+real variáveis ambientais críticas:
+Temperatura Interna: Assegurar que os sistemas de suporte à vida operem dentro de uma janela térmica
+otimizada, emitindo alerta se exceder os 25°C.
+Luminosidade Ambiente: Supervisionar a eficiência da iluminação da cabine através do divisor de
+tensão do fotoresistor, simulando condições internas e externas.
+Inclinação e Vibração Estrutural: Registrar dinamicamente anomalias mecânicas, trepidações
+excessivas da decolagem ou impactos de detritos espaciais usando sensores discretos dedicados.
+Como foco estratégico, o projeto integra-se de forma direta com o ODS 9 (Indústria, Inovação e
+Infraestrutura) da Organização das Nações Unidas (ONU), uma vez que fomenta o desenvolvimento de
+infraestruturas tecnológicas resilientes, sustentáveis e independentes de processamento em nuvem.
+3. Componentes Utilizados
+A especificação dos componentes selecionados na plataforma de simulação eletrônica Tinkercad obedeceu a
+critérios rígidos de eficiência de consumo, estabilidade do sinal elétrico e facilidade de integração lógica:
+Componente Quantidade Função Principal no Sistema da Cápsula
+Arduino Uno R3 1 Unidade Central de Processamento (MCU) e execução da
+lógica de Edge Computing.
+Display LCD 16x2 (I2C
+Adafruit) 1 Interface Homem-Máquina (IHM) para exibição de dados e
+alertas via barramento I2C.
+Sensor de Temperatura
+TMP36 1 Captura analógica da temperatura do ar interno através de
+variação de tensão térmica.
+Fotorresistor LDR 1 Medição da intensidade de luminosidade utilizando um
+divisor de tensão elétrico.
+Sensor de Inclinação (Tilt
+SW-200D) 1 Transdutor mecânico discreto mapeado na porta digital D2
+para monitorar orientação espacial.
+Sensor Piezoelétrico /
+Vibração 1 Transdutor de impacto mapeado no pino D6 focado na
+captação de vibrações estruturais.
+LEDs de Status (Verde/
+Vermelho) 2 Sinalização visual imediata do estado de integridade da
+cápsula (OK ou ALERTA).
+Resistores e Cabeamento 1-set Limitação de corrente e amarração lógica de tensão estável
+na protoboard.
+• 
+• 
+• 
+FIAP - Global Solution 2026 2
+4. Desenvolvimento do Circuito
+A arquitetura elétrica do hardware foi estruturada sobre uma matriz de contatos (protoboard) unificada,
+garantindo a perfeita distribuição de cargas a partir dos pinos de suprimento regulado do Arduino Uno. O
+circuito foi projetado de forma a mitigar ruídos e garantir loops de terra estáveis.
+O circuito usa barramentos de fiação organizados, onde o sensor de temperatura TMP36 converte os graus
+Celsius em uma faixa de tensão linear lida na porta A0 por meio da modelagem matemática baseada no
+conversor analógico-digital (ADC) de 10 bits do microcontrolador:
+V_out = (Leitura_ADC * 5.0) / 1023.0 
+Temperatura (°C) = (V_out - 0.5) * 100.0 
+Adicionalmente, os estados lógicos são monitorados e exibidos de forma inteligente através da biblioteca
+Adafruit_LiquidCrystal. O sistema implementa uma estrutura de otimização de processamento crítico: a tela
+só sofre varredura e atualização assíncrona caso um dos sensores mude o seu estado lógico atual em
+relação ao loop de processamento anterior, economizando ciclos de clock do microcontrolador.
+Esquema e Montagem do Hardware no Tinkercad
+Abaixo encontra-se registrada a captura visual exata da fiação, disposição dos componentes eletrônicos e
+barramentos estruturados para o projeto dentro do ambiente de desenvolvimento do Tinkercad:
+Figura 1: Diagrama esquemático e conexões físicas do hardware simulado no Tinkercad.
+5. Código Desenvolvido
+O algoritmo embarcado utiliza o ecossistema de controle da Adafruit para displays LCD I2C. Abaixo encontra
+se o código-fonte final totalmente estruturado e documentado:
+FIAP - Global Solution 2026
+3
+#include <Adafruit_LiquidCrystal.h>
+// Configuração do Display I2C para o Tinkercad
+Adafruit_LiquidCrystal lcd(0); 
+// --- Definição dos Pinos --
+const int pinTemp = A0;       // Sensor de Temperatura
+const int pinLDR = A1;        // Fotoresistor
+const int pinTilt = 2;        // Sensor de Inclinação (D2)
+const int pinLedVerde = 4;    // LED Verde (D4)
+const int pinLedVermelho = 5; // LED Vermelho (D5)
+const int pinPiezo = 6;       // Piezo / Vibração (D6)
+// --- Variáveis de Memória (para atualizar o LCD apenas quando houver alteração) --
+bool estadoAnteriorTemp = false;
+bool estadoAnteriorLDR = false;
+bool estadoAnteriorTilt = false;
+bool estadoAnteriorPiezo = false;
+void setup() {
+  // Configuração das portas digitais
+  pinMode(pinTilt, INPUT);
+  pinMode(pinPiezo, INPUT);
+  pinMode(pinLedVerde, OUTPUT);
+  pinMode(pinLedVermelho, OUTPUT);
+  // Inicialização do LCD com a biblioteca da Adafruit
+  lcd.begin(16, 2);
+  lcd.setBacklight(1); // Liga a luz de fundo do display
+  lcd.setCursor(0, 0);
+  lcd.print("Iniciando...");
+  delay(1500);
+  // Faz a primeira atualização da tela
+  atualizarDisplay(false, false, false, false);
+}
+void loop() {
+  // 1. Leitura e Cálculo da Temperatura
+  int valorADC = analogRead(pinTemp);
+  float tensao = valorADC * (5.0 / 1023.0);
+  float tempC = (tensao - 0.5) * 100.0;
+  bool alertaTemp = (tempC > 25.0);
+  // 2. Leitura da Luminosidade (Fotoresistor)
+  int valorLDR = analogRead(pinLDR);
+  bool alertaLDR = (valorLDR >= 512); // 512 é a metade da barra (0 a 1023)
+FIAP - Global Solution 2026 4
+  // 3. Leitura da Inclinação
+  bool alertaTilt = (digitalRead(pinTilt) == HIGH);
+  // 4. Leitura da Vibração (Piezo)
+  bool alertaPiezo = (digitalRead(pinPiezo) == HIGH);
+  // --- Lógica do Display (Atualiza APENAS se houver alteração) --
+  if (alertaTemp != estadoAnteriorTemp || alertaLDR != estadoAnteriorLDR ||
+      alertaTilt != estadoAnteriorTilt || alertaPiezo != estadoAnteriorPiezo) {
+    atualizarDisplay(alertaTemp, alertaLDR, alertaTilt, alertaPiezo);
+    // Salva os novos estados
+    estadoAnteriorTemp = alertaTemp;
+    estadoAnteriorLDR = alertaLDR;
+    estadoAnteriorTilt = alertaTilt;
+    estadoAnteriorPiezo = alertaPiezo;
+  }
+  // --- Lógica dos LEDs --
+  if (alertaTemp || alertaLDR || alertaTilt || alertaPiezo) {
+    digitalWrite(pinLedVermelho, HIGH);
+    digitalWrite(pinLedVerde, LOW);
+  } else {
+    digitalWrite(pinLedVermelho, LOW);
+    digitalWrite(pinLedVerde, HIGH);
+  }
+  delay(100);
+}
+void actualizarDisplay(bool t, bool l, bool i, bool v) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  if (t || l || i || v) {
+    lcd.print("ALERTA!");
+    lcd.setCursor(0, 1);
+    if (t) lcd.print("Tmp ");
+    if (l) lcd.print("Luz ");
+    if (i) lcd.print("Inc ");
+    if (v) lcd.print("Vib");
+  } else {
+    lcd.print("Status: OK");
+    lcd.setCursor(0, 1);
+    lcd.print("Tudo normal");
+  }
+FIAP - Global Solution 2026 5
+}
+6. Resultados Obtidos
+A fase de validação elétrica na simulação comprovou a completa eficiência do algoritmo baseado em
+memória estática. Sob condições normais de estabilidade (temperatura abaixo de 25.0°C, luminosidade
+abaixo de 512, inclinação estável e piezo inativo), o display exibe de forma fixa a mensagem "Status: OK /
+Tudo normal" e mantém o LED Verde aceso.
+Quando qualquer um dos limites é violado ou ativado dinamicamente (inclinação no pino 2 mudando para
+HIGH ou vibração no piezo captada no pino 6), o display limpa a sua memória instantaneamente e escreve
+"ALERTA!" na primeira linha, listando dinamicamente na segunda linha as abreviações dos sensores que
+dispararam a ocorrência (Tmp, Luz, Inc ou Vib). O LED Vermelho acende instantaneamente, garantindo a
+rápida sinalização visual exigida.
+7. Melhorias Futuras
+Embora o protótipo apresente excelente estabilidade e funcionalidade, refinamentos técnicos estruturais
+podem ser incorporados futuramente:
+1. 
+2. 
+Implementação de Rotinas de Interrupção Externa (ISR): Configurar a leitura por interrupção de
+hardware para o sensor de inclinação ou vibração, liberando ciclos de processamento no loop principal.
+Módulo de Armazenamento Não Volátil (EEPROM): Criar uma rotina para salvar os registros e logs dos
+alertas de sensores diretamente na memória do microcontrolador para fins de auditoria de caixa-preta.
+8. Conclusão
+O desenvolvimento do Sistema IoT para Monitoramento de Cápsula Espacial atingiu plenamente todos os
+objetivos pedagógicos e técnicos delineados pelas diretrizes da Global Solution da FIAP. Através de uma
+abordagem metódica de design de hardware e desenvolvimento de firmware com inteligência de estado, foi
+possível simular com sucesso um cenário crítico da indústria aeroespacial moderna.
+A correta conversão matemática das grandezas físicas analógicas e a resposta ágil dos atuadores em
+cenários de risco comprovam a viabilidade prática do uso de computação de borda em ambientes isolados
+com recursos energéticos e computacionais restritos.
+FIAP - Global Solution 2026
+6
