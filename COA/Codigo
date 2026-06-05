@@ -1,1 +1,103 @@
+#include <Adafruit_LiquidCrystal.h>
 
+// Configuração do Display I2C para o Tinkercad
+Adafruit_LiquidCrystal lcd(0); 
+
+// --- Definição dos Pinos ---
+const int pinTemp = A0;       // Sensor de Temperatura
+const int pinLDR = A1;        // Fotoresistor
+const int pinTilt = 2;        // Sensor de Inclinação (D2)
+const int pinLedVerde = 4;    // LED Verde (D4)
+const int pinLedVermelho = 5; // LED Vermelho (D5)
+const int pinPiezo = 6;       // Piezo / Vibração (D6)
+
+// --- Variáveis de Memória (para atualizar o LCD apenas quando houver alteração) ---
+bool estadoAnteriorTemp = false;
+bool estadoAnteriorLDR = false;
+bool estadoAnteriorTilt = false;
+bool estadoAnteriorPiezo = false;
+
+void setup() {
+  // Configuração das portas digitais
+  pinMode(pinTilt, INPUT);
+  pinMode(pinPiezo, INPUT);
+  pinMode(pinLedVerde, OUTPUT);
+  pinMode(pinLedVermelho, OUTPUT);
+
+  // Inicialização do LCD com a biblioteca da Adafruit
+  lcd.begin(16, 2);
+  lcd.setBacklight(1); // Liga a luz de fundo do display
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Iniciando...");
+  delay(1500);
+  
+  // Faz a primeira atualização da tela
+  atualizarDisplay(false, false, false, false);
+}
+
+void loop() {
+  // 1. Leitura e Cálculo da Temperatura
+  int valorADC = analogRead(pinTemp);
+  float tensao = valorADC * (5.0 / 1023.0);
+  float tempC = (tensao - 0.5) * 100.0;
+  bool alertaTemp = (tempC > 25.0);
+
+  // 2. Leitura da Luminosidade (Fotoresistor)
+  int valorLDR = analogRead(pinLDR);
+  bool alertaLDR = (valorLDR >= 512); // 512 é a metade da barra (0 a 1023)
+
+  // 3. Leitura da Inclinação
+  bool alertaTilt = (digitalRead(pinTilt) == HIGH);
+
+  // 4. Leitura da Vibração (Piezo)
+  bool alertaPiezo = (digitalRead(pinPiezo) == HIGH);
+
+  // --- Lógica do Display (Atualiza APENAS se houver alteração) ---
+  if (alertaTemp != estadoAnteriorTemp || alertaLDR != estadoAnteriorLDR ||
+      alertaTilt != estadoAnteriorTilt || alertaPiezo != estadoAnteriorPiezo) {
+    
+    atualizarDisplay(alertaTemp, alertaLDR, alertaTilt, alertaPiezo);
+    
+    // Salva os novos estados
+    estadoAnteriorTemp = alertaTemp;
+    estadoAnteriorLDR = alertaLDR;
+    estadoAnteriorTilt = alertaTilt;
+    estadoAnteriorPiezo = alertaPiezo;
+  }
+
+  // --- Lógica dos LEDs ---
+  // Se QUALQUER sensor estiver em estado de alerta -> Luz Vermelha
+  if (alertaTemp || alertaLDR || alertaTilt || alertaPiezo) {
+    digitalWrite(pinLedVermelho, HIGH);
+    digitalWrite(pinLedVerde, LOW);
+  } 
+  // Se TODOS os sensores estiverem tranquilos -> Luz Verde
+  else {
+    digitalWrite(pinLedVermelho, LOW);
+    digitalWrite(pinLedVerde, HIGH);
+  }
+
+  delay(100); // Pequena pausa para manter a estabilidade do sistema
+}
+
+// Função auxiliar para organizar o texto do display
+void atualizarDisplay(bool t, bool l, bool i, bool v) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  
+  if (t || l || i || v) {
+    lcd.print("ALERTA!");
+    lcd.setCursor(0, 1);
+    
+    // Mostra quais sensores causaram o alerta na linha de baixo
+    if (t) lcd.print("Tmp ");
+    if (l) lcd.print("Luz ");
+    if (i) lcd.print("Inc ");
+    if (v) lcd.print("Vib");
+  } else {
+    lcd.print("Status: OK");
+    lcd.setCursor(0, 1);
+    lcd.print("Tudo normal");
+  }
+}
